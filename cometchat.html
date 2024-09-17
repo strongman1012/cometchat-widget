@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CometChat Widget</title>
+  <!-- CometChat Widget SDK -->
+  <script defer src="https://widget-js.cometchat.io/v3/cometchatwidget.js"></script>
+  <style>
+    /* Ensure the body and html take up full height and width */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    /* Ensure the chat div takes full width and height */
+    #cometchat {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="cometchat"></div>
+
+  <script>
+    // Function to get query parameter by name
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // Wait for the DOM content to be fully loaded before initializing CometChat
+    window.addEventListener('DOMContentLoaded', (event) => {
+      const userID = getQueryParam('user'); // Get user ID from URL parameter
+
+      // Initialize CometChat Widget
+      CometChatWidget.init({
+        "appID": "263706ddc073b2fa",        // Your CometChat App ID
+        "appRegion": "us",                  // Your App Region
+        "authKey": "6fb39fee7a954b2e7cb00dbeec41d251ea1008fd"  // Your Auth Key
+      }).then(response => {
+        console.log("CometChat initialization successful.");
+
+        // Log in to CometChat with the user ID
+        CometChatWidget.login({
+          "uid": "cometchat-uid-1"           // Replace with a valid user ID
+        }).then(response => {
+          console.log("User logged in successfully:", response);
+
+          // Launch the CometChat widget
+          CometChatWidget.launch({
+            "widgetID": "e15b9ab9-21ad-4a2f-a63d-22c1064fc2b8",  // Your Widget ID
+            "target": "#cometchat",
+            "docked": "false",               // Set docked to false to cover full screen
+            "alignment": "right",
+            "roundedCorners": "true",
+            "height": "100%",
+            "width": "100%",
+            "defaultID": userID,            // Use the user ID from the URL parameter
+            "defaultType": "user"
+          });
+
+        }, error => {
+          console.error("User login failed:", error);
+        });
+
+      }, error => {
+        console.error("CometChat initialization failed:", error);
+      });
+    });
+  </script>
+</body>
+</html>
